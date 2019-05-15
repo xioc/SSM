@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.chapter5.mapper.EmployeeTaskMapper">
+
+    <resultMap type="com.ssm.chapter5.pojo.EmployeeTask" id="EmployeeTaskMap">
+        <id column="id" property="id"/>
+        <result column="emp_id" property="empId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="note" property="note"/>
+        <association property="task" column="task_id"
+            select="com.ssm.chapter5.mapper.TaskMapper.getTask"/>
+    </resultMap>
+    
+    <select id="getEmployeeTaskByEmpId" resultMap="EmployeeTaskMap">
+        select id, emp_id, task_name, task_id, note from t_employee_task 
+        where emp_id = #{empId}
+    </select>
+</mapper>

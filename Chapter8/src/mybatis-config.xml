@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases><!-- 别名 -->
+		<typeAlias alias="role" type="com.ssm.chapter8.pojo.Role" />
+	</typeAliases>
+
+	<plugins>
+	    <!-- 该插件和分页插件不兼容，测试分页插件时，需要注释掉他 -->
+		<plugin interceptor="com.ssm.chapter8.plugin.MyPlugin">
+			<property name="dbType" value="mysql" />
+		</plugin>
+		 <!-- 
+		<plugin interceptor="com.ssm.chapter8.plugin.PagePlugin">
+			<property name="default.page" value="1" />
+			<property name="default.pageSize" value="20" />
+			<property name="default.useFlag" value="true" />
+			<property name="default.checkFlag" value="false" />
+			<property name="default.cleanOrderBy" value="false" />
+		</plugin>
+		-->
+	</plugins>
+
+	<!-- 数据库环境 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://localhost:3306/chapter8" />
+				<property name="username" value="root" />
+				<property name="password" value="123456" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- 映射文件 -->
+	<mappers>
+		<mapper resource="com/ssm/chapter8/mapper/RoleMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="xmlAspect" class="com.ssm.chapter11.xml.aspect.XmlAspect" />
+	<bean id="roleService" class="com.ssm.chapter11.xml.service.impl.RoleServiceImpl" />
+
+    <!-- 
+	<aop:config>
+		
+		<aop:aspect ref="xmlAspect">
+			<aop:before method="before"
+				pointcut="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<aop:after method="after"
+				pointcut="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<aop:after-throwing method="afterThrowing"
+				pointcut="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<aop:after-returning method="afterReturning"
+				pointcut="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<aop:around method="around"
+				pointcut="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<aop:declare-parents
+				types-matching="com.ssm.chapter11.xml.service.impl.RoleServiceImpl+"
+				implement-interface="com.ssm.chapter11.aop.verifier.RoleVerifier"
+				default-impl="com.ssm.chapter11.aop.verifier.impl.RoleVerifierImpl" />
+		</aop:aspect>
+	</aop:config>
+	 -->
+	
+	<aop:config>
+		<aop:aspect ref="xmlAspect">
+		    <!-- 自定义切点 -->
+			<aop:pointcut id="printRole"
+				expression="execution(* com.ssm.chapter11.xml.service.impl.RoleServiceImpl.printRole(..))" />
+			<!-- 定义通知 -->
+			<aop:before method="before" pointcut-ref="printRole" />
+			<aop:after method="after" pointcut-ref="printRole" />
+			<aop:after-throwing method="afterThrowing"
+				pointcut-ref="printRole" />
+			<aop:after-returning method="afterReturning"
+				pointcut-ref="printRole" />
+			<aop:around method="around" pointcut-ref="printRole" />
+			<!-- 引入增强 -->
+			<aop:declare-parents
+				types-matching="com.ssm.chapter11.xml.service.impl.RoleServiceImpl+"
+				implement-interface="com.ssm.chapter11.aop.verifier.RoleVerifier"
+				default-impl="com.ssm.chapter11.aop.verifier.impl.RoleVerifierImpl" />
+		</aop:aspect>
+	</aop:config>
+</beans>

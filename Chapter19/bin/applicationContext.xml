@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="50" />
+		<property name="maxTotal" value="100" />
+		<property name="maxWaitMillis" value="20000" />
+	</bean>
+
+	<bean id="stringRedisSerializer"
+		class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+
+	<bean id="connectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="localhost" />
+		<property name="port" value="6379" />
+		<property name="poolConfig" ref="poolConfig" />
+	</bean>
+
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultSerializer" ref="stringRedisSerializer" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="stringRedisSerializer" />
+	</bean>
+
+	<bean id="redisMsgListener"
+		class="com.ssm.chapter19.redis.listener.RedisMessageListener">
+		<property name="redisTemplate" ref="redisTemplate" />
+	</bean>
+
+	<bean id="topicContainer"
+		class="org.springframework.data.redis.listener.RedisMessageListenerContainer"
+		destroy-method="destroy">
+		<!--Redis连接工厂 -->
+		<property name="connectionFactory" ref="connectionFactory" />
+		<!--连接池，这里只要线程池生存，才能继续监听 -->
+		<property name="taskExecutor">
+			<bean
+				class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+				<property name="poolSize" value="2" />
+			</bean>
+		</property>
+		<!--消息监听Map -->
+		<property name="messageListeners">
+			<map>
+				<!--配置监听者，key-ref和bean id定义一致 -->
+				<entry key-ref="redisMsgListener">
+					<!--监听类 -->
+					<bean class="org.springframework.data.redis.listener.ChannelTopic">
+						<constructor-arg value="chat" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>

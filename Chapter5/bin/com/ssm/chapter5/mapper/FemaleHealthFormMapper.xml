@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.chapter5.mapper.FemaleHealthFormMapper">
+	<select id="getFemaleHealthForm" parameterType="long"
+		resultType="com.ssm.chapter5.pojo.FemaleHealthForm">
+		select id, heart, liver, spleen, lung, kidney, uterus, note from
+		t_female_health_form where emp_id = #{id}
+	</select>
+</mapper>

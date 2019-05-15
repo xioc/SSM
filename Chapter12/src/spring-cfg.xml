@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> 
+		<property name="username" value="root" /> <property name="password" value="123456" 
+		/> <property name="driverClass" value="com.mysql.jdbc.Driver" /> <property 
+		name="url" value="jdbc:mysql://localhost:3306/chapter12" /> </bean> -->
+	<!-- 数据库连接池 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/chapter12" />
+		<property name="username" value="root" />
+		<property name="password" value="123456" />
+		<!--连接池的最大数据库连接数 -->
+		<property name="maxActive" value="255" />
+		<!--最大等待连接中的数量 -->
+		<property name="maxIdle" value="5" />
+		<!--最大等待毫秒数 -->
+		<property name="maxWait" value="10000" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:sqlMapConfig.xml" />
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+		<!-- <constructor-arg value="BATCH"/> -->
+	</bean>
+
+	<!-- <bean id="roleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+		<property name="mapperInterface" value="com.ssm.chapter12.mapper.RoleMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate]"/>
+    </bean>
+	-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.ssm.chapter12.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<!-- 使用sqlSessionTemplateBeanName将覆盖sqlSessionFactoryBeanName的配置 -->
+		<!-- <property name="sqlSessionTemplateBeanName" value="sqlSessionFactory"/> -->
+		<!-- 指定标注才扫描成为Mapper -->
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+	</bean>
+</beans>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.chapter5.mapper.WorkCardMapper">
+    <select id="getWorkCardByEmpId" parameterType="long" resultType="com.ssm.chapter5.pojo.WorkCard">
+        SELECT  id, emp_id as empId, real_name as realName, department, mobile, position, note FROM t_work_card
+        where emp_id = #{empId} 
+    </select>
+</mapper>

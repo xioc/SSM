@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.chapter5.mapper.EmployeeMapper">
+	<resultMap type="com.ssm.chapter5.pojo.Employee" id="employee">
+		<id column="id" property="id" />
+		<result column="real_name" property="realName" />
+		<result column="sex" property="sex"
+			typeHandler="com.ssm.chapter5.typeHandler.SexTypeHandler" />
+		<result column="birthday" property="birthday" />
+		<result column="mobile" property="mobile" />
+		<result column="email" property="email" />
+		<result column="position" property="position" />
+		<result column="note" property="note" />
+		<association property="workCard" column="id"
+			select="com.ssm.chapter5.mapper.WorkCardMapper.getWorkCardByEmpId" />
+		<collection property="employeeTaskList" column="id"
+			fetchType="eager"
+			select="com.ssm.chapter5.mapper.EmployeeTaskMapper.getEmployeeTaskByEmpId" />
+		<discriminator javaType="long" column="sex">
+			<case value="1" resultMap="maleHealthFormMapper" />
+			<case value="2" resultMap="femaleHealthFormMapper" />
+		</discriminator>
+	</resultMap>
+
+	<resultMap type="com.ssm.chapter5.pojo.FemaleEmployee" id="femaleHealthFormMapper"
+		extends="employee">
+		<association property="femaleHealthForm" column="id"
+			select="com.ssm.chapter5.mapper.FemaleHealthFormMapper.getFemaleHealthForm" />
+	</resultMap>
+
+	<resultMap type="com.ssm.chapter5.pojo.MaleEmployee" id="maleHealthFormMapper"
+		extends="employee">
+		<association property="maleHealthForm" column="id"
+			select="com.ssm.chapter5.mapper.MaleHealthFormMapper.getMaleHealthForm" />
+	</resultMap>
+
+	<select id="getEmployee" parameterType="long" resultMap="employee">
+		select
+		id, real_name as realName, sex, birthday, mobile, email, position,
+		note from t_employee where id = #{id}
+	</select>
+
+	<resultMap id="employee2" type="com.ssm.chapter5.pojo.Employee">
+		<id column="id" property="id" />
+		<result column="real_name" property="realName" />
+		<result column="sex" property="sex"
+			typeHandler="com.ssm.chapter5.typeHandler.SexTypeHandler" />
+		<result column="birthday" property="birthday" />
+		<result column="mobile" property="mobile" />
+		<result column="email" property="email" />
+		<result column="position" property="position" />
+		<association property="workCard" javaType="com.ssm.chapter5.pojo.WorkCard"
+			column="id">
+			<id column="wc_id" property="id" />
+			<result column="id" property="empId" />
+			<result column="wc_real_name" property="realName" />
+			<result column="wc_department" property="department" />
+			<result column="wc_mobile" property="mobile" />
+			<result column="wc_position" property="position" />
+			<result column="wc_note" property="note" />
+		</association>
+		<collection property="employeeTaskList" ofType="com.ssm.chapter5.pojo.EmployeeTask"
+			column="id">
+			<id column="et_id" property="id" />
+			<result column="id" property="empId" />
+			<result column="task_name" property="taskName" />
+			<result column="note" property="note" />
+			<association property="task" javaType="com.ssm.chapter5.pojo.Task"
+				column="et_task_id">
+				<id column="t_id" property="id" />
+				<result column="t_title" property="title" />
+				<result column="t_context" property="context" />
+				<result column="t_note" property="note" />
+			</association>
+		</collection>
+		<discriminator javaType="int" column="sex">
+			<case value="1" resultMap="maleHealthFormMapper2" />
+			<case value="2" resultMap="femaleHealthFormMapper2" />
+		</discriminator>
+	</resultMap>
+
+
+	<resultMap type="com.ssm.chapter5.pojo.MaleEmployee" id="maleHealthFormMapper2"
+		extends="employee2">
+		<association property="maleHealthForm" column="id"
+			javaType="com.ssm.chapter5.pojo.MaleHealthForm">
+			<id column="h_id" property="id" />
+			<result column="h_heart" property="heart" />
+			<result column="h_liver" property="liver" />
+			<result column="h_spleen" property="spleen" />
+			<result column="h_lung" property="lung" />
+			<result column="h_kidney" property="kidney" />
+			<result column="h_prostate" property="prostate" />
+			<result column="h_note" property="note" />
+		</association>
+	</resultMap>
+
+	<resultMap type="com.ssm.chapter5.pojo.FemaleEmployee" id="femaleHealthFormMapper2"
+		extends="employee">
+		<association property="femaleHealthForm" column="id"
+			javaType="com.ssm.chapter5.pojo.FemaleHealthForm">
+			<id column="h_id" property="id" />
+			<result column="h_heart" property="heart" />
+			<result column="h_liver" property="liver" />
+			<result column="h_spleen" property="spleen" />
+			<result column="h_lung" property="lung" />
+			<result column="h_kidney" property="kidney" />
+			<result column="h_uterus" property="uterus" />
+			<result column="h_note" property="note" />
+		</association>
+	</resultMap>
+
+	<select id="getEmployee2" parameterType="long" resultMap="employee2">
+		select
+		emp.id, emp.real_name, emp.sex, emp.birthday,
+		emp.mobile, emp.email,
+		emp.position, emp.note,
+		et.id as et_id, et.task_id as et_task_id,
+		et.task_name as et_task_name,
+		et.note as et_note,
+		if (emp.sex = 1,
+		mhf.id, fhf.id) as h_id,
+		if (emp.sex = 1, mhf.heart, fhf.heart) as
+		h_heart,
+		if (emp.sex = 1, mhf.liver, fhf.liver) as h_liver,
+		if (emp.sex
+		= 1, mhf.spleen, fhf.spleen) as h_spleen,
+		if (emp.sex = 1, mhf.lung,
+		fhf.lung) as h_lung,
+		if (emp.sex = 1, mhf.kidney, fhf.kidney) as
+		h_kidney,
+		if (emp.sex = 1, mhf.note, fhf.note) as h_note,
+		mhf.prostate
+		as h_prostate, fhf.uterus as h_uterus,
+		wc.id wc_id, wc.real_name
+		wc_real_name, wc.department wc_department,
+		wc.mobile wc_mobile,
+		wc.position wc_position, wc.note as wc_note,
+		t.id as t_id, t.title as
+		t_title, t.context as t_context, t.note as t_note
+		from t_employee emp
+		left join t_employee_task et on emp.id = et.emp_id
+		left join
+		t_female_health_form fhf on emp.id = fhf.emp_id
+		left join
+		t_male_health_form mhf on emp.id = mhf.emp_id
+		left join t_work_card wc
+		on emp.id = wc.emp_id
+		left join t_task t on et.task_id = t.id
+		where
+		emp.id = #{id}
+	</select>
+</mapper>

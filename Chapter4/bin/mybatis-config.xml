@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="jdbc.properties">
+		<!-- <property name="database.driver" value="com.mysql.jdbc.Driver"/> <property 
+			name="database.url" value="jdbc:mysql://localhost:3306/chapter4"/> <property 
+			name="database.username" value="root"/> <property name="database.password" 
+			value="123456"/> -->
+	</properties>
+	<typeAliases><!-- 别名 -->
+		<!-- <typeAlias alias="role" type="com.learn.ssm.chapter4.pojo.Role"/> -->
+		<package name="com.learn.ssm.chapter4.pojo" />
+	</typeAliases>
+	<typeHandlers>
+		<!-- <typeHandler jdbcType="VARCHAR" javaType="string" handler="com.learn.ssm.chapter4.typehandler.MyTypeHandler" 
+			/> -->
+		<package name="com.learn.ssm.chapter4.typehandler" />
+
+	</typeHandlers>
+	<!-- 数据库环境 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="com.learn.ssm.chapter4.datasource.DbcpDataSourceFactory">
+				<property name="driver" value="${database.driver}" />
+				<property name="url" value="${database.url}" />
+				<property name="username" value="${database.username}" />
+				<property name="password" value="${database.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+    <!-- 
+	<databaseIdProvider type="DB_VENDOR">
+		<property name="Oracle" value="oracle" />
+		<property name="MySQL" value="mysql" />
+		<property name="DB2" value="db2" />
+	</databaseIdProvider>
+	 -->
+	<databaseIdProvider
+		type="com.learn.ssm.chapter4.databaseidprovider.MyDatabaseIdProvider">
+		<property name="msg" value="自定义DatabaseIdProvider" />
+	</databaseIdProvider>
+	<mappers>
+		<package name="com.learn.ssm.chapter4.mapper" />
+	</mappers>
+</configuration>

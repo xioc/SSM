@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter4.mapper.UserMapper">
+	<resultMap id="userMapper" type="user">
+		<result property="id" column="id" />
+		<result property="userName" column="user_name" />
+		<result property="password" column="password" />
+		<result property="sex" column="sex" 
+            typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <!-- 
+        <result property="sex" column="sex" 
+            typeHandler="org.apache.ibatis.type.EnumTypeHandler"/> 
+        -->
+        <!-- 
+        <result property="sex" column="sex"  
+            typeHandler="com.learn.ssm.chapter4.typehandler.SexEnumTypeHandler"/>
+        -->
+		<result property="mobile" column="mobile" />
+		<result property="tel" column="tel" />
+		<result property="email" column="email" />
+		<result property="note" column="note" />
+	</resultMap>
+	<select id="getUser" resultMap="userMapper" parameterType="long">
+	  select id, user_name, password, sex, mobile, tel, email, note from t_user 
+      where id = #{id}
+	</select>
+</mapper>

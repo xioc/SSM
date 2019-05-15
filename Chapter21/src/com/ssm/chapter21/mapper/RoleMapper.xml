@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.chapter21.dao.RoleDao">
+
+	<select id="getRole" resultType="com.ssm.chapter21.pojo.Role">
+		select id, role_name as
+		roleName, note from t_role where id = #{id}
+	</select>
+
+	<delete id="deleteRole">
+		delete from t_role where id=#{id}
+	</delete>
+
+	<insert id="insertRole" parameterType="com.ssm.chapter21.pojo.Role"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_role (role_name, note) values(#{roleName}, #{note})
+	</insert>
+
+	<update id="updateRole" parameterType="com.ssm.chapter21.pojo.Role">
+		update t_role set role_name = #{roleName}, note = #{note}
+		where id = #{id}
+	</update>
+	<select id="findRoles" resultType="com.ssm.chapter21.pojo.Role">
+		select id, role_name as roleName, note from t_role
+		<where>
+			<if test="roleName != null">
+				role_name like concat('%', #{roleName}, '%')
+			</if>
+			<if test="note != null">
+				note like concat('%', #{note}, '%')
+			</if>
+		</where>
+	</select>
+</mapper>  

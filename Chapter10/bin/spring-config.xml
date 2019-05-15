@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	<bean id="role_1" class="com.ssm.chapter9.pojo.Role">
+		<property name="roleName" value="高级工程师" />
+		<property name="note" value="重要人员" />
+	</bean>
+
+	<bean id="role_2" class="com.ssm.chapter9.pojo.Role">
+		<property name="id" value="1" />
+		<property name="roleName" value="高级工程师" />
+		<property name="note" value="重要人员" />
+	</bean>
+
+
+	<bean id="source" class="com.ssm.chapter9.pojo.Source">
+		<property name="fruit" value="橙汁" />
+		<property name="sugar" value="少糖" />
+		<property name="size" value="大杯" />
+	</bean>
+
+	<bean id="juiceMaker2" class="com.ssm.chapter9.pojo.JuiceMaker2">
+		<property name="beverageShop" value="贡茶" />
+		<property name="source" ref="source" />
+	</bean>
+
+	<bean id="complexAssembly" class="com.ssm.chapter10.pojo.ComplexAssembly">
+		<property name="id" value="1" />
+		<property name="list">
+			<list>
+				<value>value-list-1</value>
+				<value>value-list-2</value>
+				<value>value-list-3</value>
+			</list>
+		</property>
+		<property name="map">
+			<map>
+				<entry key="key1" value="value-key-1" />
+				<entry key="key2" value="value-key-2" />
+				<entry key="key3" value="value-key-3" />
+			</map>
+		</property>
+		<property name="props">
+			<props>
+				<prop key="prop1">value-prop-1</prop>
+				<prop key="prop2">value-prop-2</prop>
+				<prop key="prop3">value-prop-3</prop>
+			</props>
+		</property>
+		<property name="set">
+			<set>
+				<value>value-set-1</value>
+				<value>value-set-2</value>
+				<value>value-set-3</value>
+			</set>
+		</property>
+		<property name="array">
+			<array>
+				<value>value-array-1</value>
+				<value>value-array-2</value>
+				<value>value-array-3</value>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="role1" class="com.ssm.chapter10.pojo.Role">
+		<property name="id" value="1" />
+		<property name="roleName" value="role_name_1" />
+		<property name="note" value="role_note_1" />
+	</bean>
+
+	<bean id="role2" class="com.ssm.chapter10.pojo.Role">
+		<property name="id" value="2" />
+		<property name="roleName" value="role_name_2" />
+		<property name="note" value="role_note_2" />
+	</bean>
+
+	<bean id="user1" class="com.ssm.chapter10.pojo.User">
+		<property name="id" value="1" />
+		<property name="userName" value="user_name_1" />
+		<property name="note" value="role_note_1" />
+	</bean>
+
+	<bean id="user2" class="com.ssm.chapter10.pojo.User">
+		<property name="id" value="2" />
+		<property name="userName" value="user_name_2" />
+		<property name="note" value="role_note_1" />
+	</bean>
+
+	<bean id="userRoleAssembly" class="com.ssm.chapter10.pojo.UserRoleAssembly">
+		<property name="id" value="1" />
+		<property name="list">
+			<list>
+				<ref bean="role1" />
+				<ref bean="role2" />
+			</list>
+		</property>
+		<property name="map">
+			<map>
+				<entry key-ref="role1" value-ref="user1" />
+				<entry key-ref="role2" value-ref="user2" />
+			</map>
+		</property>
+		<property name="set">
+			<set>
+				<ref bean="role1" />
+				<ref bean="role2" />
+			</set>
+		</property>
+	</bean>
+</beans>
